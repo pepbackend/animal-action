@@ -1,3 +1,37 @@
 package com.example.animalaction.application.animal;
-import com.example.animalaction.domain.animal.Animal; import java.time.Instant; import java.util.*;
-public class AnimalService { private final AnimalRepository r; private final AnimalEventPublisher p; public AnimalService(AnimalRepository r,AnimalEventPublisher p){this.r=r;this.p=p;} public Animal register(String n,String s){var a=r.save(Animal.register(n,s,Instant.now()));p.publish("AnimalRegistered",a,null);return a;} public List<Animal> all(){return r.findAll();} public Animal get(UUID id){return r.findById(id).orElseThrow(()->new NoSuchElementException("Animal not found: "+id));} public Animal execute(UUID id,String action){var a=get(id);if(action==null||action.isBlank())throw new IllegalArgumentException("Action is required");p.publish("AnimalActionExecuted",a,action.trim());return a;} }
+
+import com.example.animalaction.domain.animal.Animal;
+import java.time.Instant;
+import java.util.*;
+
+public class AnimalService {
+  private final AnimalRepository r;
+  private final AnimalEventPublisher p;
+
+  public AnimalService(AnimalRepository r, AnimalEventPublisher p) {
+    this.r = r;
+    this.p = p;
+  }
+
+  public Animal register(String n, String s) {
+    var a = r.save(Animal.register(n, s, Instant.now()));
+    p.publish("AnimalRegistered", a, null);
+    return a;
+  }
+
+  public List<Animal> all() {
+    return r.findAll();
+  }
+
+  public Animal get(UUID id) {
+    return r.findById(id).orElseThrow(() -> new NoSuchElementException("Animal not found: " + id));
+  }
+
+  public Animal execute(UUID id, String action) {
+    var a = get(id);
+    if (action == null || action.isBlank())
+      throw new IllegalArgumentException("Action is required");
+    p.publish("AnimalActionExecuted", a, action.trim());
+    return a;
+  }
+}

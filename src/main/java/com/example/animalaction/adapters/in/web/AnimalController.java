@@ -1,3 +1,43 @@
 package com.example.animalaction.adapters.in.web;
-import com.example.animalaction.application.animal.AnimalService; import com.example.animalaction.domain.animal.Animal; import jakarta.validation.Valid; import jakarta.validation.constraints.NotBlank; import org.springframework.http.*; import org.springframework.web.bind.annotation.*; import java.util.*;
-@RestController @RequestMapping("/api/animals") public class AnimalController { private final AnimalService s; public AnimalController(AnimalService s){this.s=s;} @PostMapping public ResponseEntity<Animal> register(@Valid @RequestBody Request r){return ResponseEntity.status(201).body(s.register(r.name(),r.species()));} @GetMapping public List<Animal> all(){return s.all();} @GetMapping("/{id}") public Animal get(@PathVariable UUID id){return s.get(id);} @PostMapping("/{id}/actions") public Animal action(@PathVariable UUID id,@Valid @RequestBody Action a){return s.execute(id,a.action());} public record Request(@NotBlank String name,@NotBlank String species){} public record Action(@NotBlank String action){} }
+
+import com.example.animalaction.application.animal.AnimalService;
+import com.example.animalaction.domain.animal.Animal;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import java.util.*;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/animals")
+public class AnimalController {
+  private final AnimalService s;
+
+  public AnimalController(AnimalService s) {
+    this.s = s;
+  }
+
+  @PostMapping
+  public ResponseEntity<Animal> register(@Valid @RequestBody Request r) {
+    return ResponseEntity.status(201).body(s.register(r.name(), r.species()));
+  }
+
+  @GetMapping
+  public List<Animal> all() {
+    return s.all();
+  }
+
+  @GetMapping("/{id}")
+  public Animal get(@PathVariable UUID id) {
+    return s.get(id);
+  }
+
+  @PostMapping("/{id}/actions")
+  public Animal action(@PathVariable UUID id, @Valid @RequestBody Action a) {
+    return s.execute(id, a.action());
+  }
+
+  public record Request(@NotBlank String name, @NotBlank String species) {}
+
+  public record Action(@NotBlank String action) {}
+}
