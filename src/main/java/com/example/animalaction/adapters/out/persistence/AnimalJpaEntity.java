@@ -14,11 +14,11 @@ public class AnimalJpaEntity {
 
   protected AnimalJpaEntity() {}
 
-  public AnimalJpaEntity(UUID id, String n, String s, Instant c) {
+  public AnimalJpaEntity(UUID id, String name, String species, Instant createdAt) {
     this.id = id;
-    name = n;
-    species = s;
-    createdAt = c;
+    this.name = name;
+    this.species = species;
+    this.createdAt = createdAt;
   }
 
   public UUID id() {

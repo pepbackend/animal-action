@@ -7,26 +7,27 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class AnimalPersistenceAdapter implements AnimalRepository {
-  private final SpringAnimalRepository r;
+  private final SpringAnimalRepository springAnimalRepository;
 
-  public AnimalPersistenceAdapter(SpringAnimalRepository r) {
-    this.r = r;
+  public AnimalPersistenceAdapter(SpringAnimalRepository springAnimalRepository) {
+    this.springAnimalRepository = springAnimalRepository;
   }
 
-  public Animal save(Animal a) {
-    var e = r.save(new AnimalJpaEntity(a.id(), a.name(), a.species(), a.createdAt()));
-    return map(e);
+  public Animal save(Animal animal) {
+    var savedEntity = springAnimalRepository.save(
+        new AnimalJpaEntity(animal.id(), animal.name(), animal.species(), animal.createdAt()));
+    return map(savedEntity);
   }
 
   public Optional<Animal> findById(UUID id) {
-    return r.findById(id).map(this::map);
+    return springAnimalRepository.findById(id).map(this::map);
   }
 
   public List<Animal> findAll() {
-    return r.findAll().stream().map(this::map).toList();
+    return springAnimalRepository.findAll().stream().map(this::map).toList();
   }
 
-  private Animal map(AnimalJpaEntity e) {
-    return new Animal(e.id(), e.name(), e.species(), e.createdAt());
+  private Animal map(AnimalJpaEntity entity) {
+    return new Animal(entity.id(), entity.name(), entity.species(), entity.createdAt());
   }
 }

@@ -40,6 +40,8 @@ Before changing code, read this file, `docs/README.md`, the applicable `.specs/<
 - Add a Flyway migration for schema changes. Never use `ddl-auto` to mutate a shared database.
 - Do not add retries, caching, async processing, or distributed transactions without a documented decision record.
 - Never commit credentials, personal data, generated output, or unreviewed dependency upgrades.
+- All Java source and test classes must pass the Maven Checkstyle linter during `mvn validate` and `mvn verify`.
+- Use meaningful, domain-oriented names for classes, methods, parameters, fields, and local variables. Do not use unexplained abbreviations or single-letter names such as `a`, `r`, `p`, `n`, or `s`; names should communicate the value's role.
 
 ## Verification and handoff
 

@@ -1,12 +1,15 @@
 package com.example.animalaction.config;
 
-import com.example.animalaction.application.animal.*;
-import org.springframework.context.annotation.*;
+import com.example.animalaction.application.animal.AnimalEventPublisher;
+import com.example.animalaction.application.animal.AnimalRepository;
+import com.example.animalaction.application.animal.AnimalService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ServiceConfig {
   @Bean
-  AnimalService animalService(AnimalRepository r, AnimalEventPublisher p) {
-    return new AnimalService(r, p);
+  AnimalService animalService(AnimalRepository animalRepository, AnimalEventPublisher animalEventPublisher) {
+    return new AnimalService(animalRepository, animalEventPublisher);
   }
 }

@@ -11,30 +11,30 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/animals")
 public class AnimalController {
-  private final AnimalService s;
+  private final AnimalService animalService;
 
-  public AnimalController(AnimalService s) {
-    this.s = s;
+  public AnimalController(AnimalService animalService) {
+    this.animalService = animalService;
   }
 
   @PostMapping
-  public ResponseEntity<Animal> register(@Valid @RequestBody Request r) {
-    return ResponseEntity.status(201).body(s.register(r.name(), r.species()));
+  public ResponseEntity<Animal> register(@Valid @RequestBody Request request) {
+    return ResponseEntity.status(201).body(animalService.register(request.name(), request.species()));
   }
 
   @GetMapping
   public List<Animal> all() {
-    return s.all();
+    return animalService.all();
   }
 
   @GetMapping("/{id}")
   public Animal get(@PathVariable UUID id) {
-    return s.get(id);
+    return animalService.get(id);
   }
 
   @PostMapping("/{id}/actions")
-  public Animal action(@PathVariable UUID id, @Valid @RequestBody Action a) {
-    return s.execute(id, a.action());
+  public Animal action(@PathVariable UUID id, @Valid @RequestBody Action actionRequest) {
+    return animalService.execute(id, actionRequest.action());
   }
 
   public record Request(@NotBlank String name, @NotBlank String species) {}

@@ -4,7 +4,7 @@ import com.example.animalaction.domain.animal.Animal;
 import java.util.*;
 
 public interface AnimalRepository {
-  Animal save(Animal a);
+  Animal save(Animal animal);
 
   Optional<Animal> findById(UUID id);
 

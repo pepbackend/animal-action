@@ -14,17 +14,24 @@ public class KafkaAnimalEventPublisher implements AnimalEventPublisher {
   private final String topic;
 
   public KafkaAnimalEventPublisher(
-      KafkaTemplate<String, Object> k,
-      @Value("${spring.kafka-topics.actions:animal-actions}") String t) {
-    kafka = k;
-    topic = t;
+      KafkaTemplate<String, Object> kafkaTemplate,
+      @Value("${spring.kafka-topics.actions:animal-actions}") String topicName) {
+    kafka = kafkaTemplate;
+    topic = topicName;
   }
 
-  public void publish(String type, Animal a, String action) {
+  public void publish(String type, Animal animal, String action) {
     kafka.send(
         topic,
-        a.id().toString(),
-        new Event(UUID.randomUUID(), type, a.id(), a.name(), a.species(), action, Instant.now()));
+        animal.id().toString(),
+        new Event(
+            UUID.randomUUID(),
+            type,
+            animal.id(),
+            animal.name(),
+            animal.species(),
+            action,
+            Instant.now()));
   }
 
   public record Event(
