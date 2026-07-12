@@ -1,0 +1,32 @@
+openapi: 3.0.4
+info: {title: Animal Action API, version: 0.1.0, description: API-first animal registration and action execution}
+servers: [{url: http://localhost:8080}]
+paths:
+  /api/animals:
+    post:
+      operationId: registerAnimal
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/AnimalRequest'}}}}
+      responses: {'201': {description: Registered, content: {application/json: {schema: {$ref: '#/components/schemas/Animal'}}}}, '400': {$ref: '#/components/responses/BadRequest'}}
+    get:
+      operationId: listAnimals
+      responses: {'200': {description: Animals, content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/Animal'}}}}}}
+  /api/animals/{animalId}:
+    parameters: [{name: animalId, in: path, required: true, schema: {type: string, format: uuid}}]
+    get:
+      operationId: getAnimal
+      responses: {'200': {description: Animal, content: {application/json: {schema: {$ref: '#/components/schemas/Animal'}}}}, '404': {$ref: '#/components/responses/NotFound'}}
+  /api/animals/{animalId}/actions:
+    parameters: [{name: animalId, in: path, required: true, schema: {type: string, format: uuid}}]
+    post:
+      operationId: executeAnimalAction
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/ActionRequest'}}}}
+      responses: {'200': {description: Action accepted, content: {application/json: {schema: {$ref: '#/components/schemas/Animal'}}}}, '400': {$ref: '#/components/responses/BadRequest'}, '404': {$ref: '#/components/responses/NotFound'}}
+components:
+  schemas:
+    AnimalRequest: {type: object, required: [name, species], properties: {name: {type: string, minLength: 1, maxLength: 120}, species: {type: string, minLength: 1, maxLength: 120}}}
+    ActionRequest: {type: object, required: [action], properties: {action: {type: string, minLength: 1, maxLength: 120}}}
+    Animal: {allOf: [{$ref: '#/components/schemas/AnimalRequest'}, {type: object, required: [id, createdAt], properties: {id: {type: string, format: uuid}, createdAt: {type: string, format: date-time}}}]}
+    ProblemDetail: {type: object, required: [type, title, status, detail], properties: {type: {type: string, format: uri}, title: {type: string}, status: {type: integer}, detail: {type: string}}}
+  responses:
+    BadRequest: {description: Invalid request, content: {application/problem+json: {schema: {$ref: '#/components/schemas/ProblemDetail'}}}}
+    NotFound: {description: Not found, content: {application/problem+json: {schema: {$ref: '#/components/schemas/ProblemDetail'}}}}
