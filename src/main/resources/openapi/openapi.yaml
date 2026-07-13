@@ -1,4 +1,4 @@
-openapi: 3.0.4
+openapi: "3.0.3"
 info: {title: Animal Action API, version: 0.1.0, description: API-first animal registration and action execution}
 servers: [{url: http://localhost:8080}]
 paths:
